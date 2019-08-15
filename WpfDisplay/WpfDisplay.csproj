@@ -90,6 +90,10 @@
     <Compile Include="Controls\RenderDisplay.xaml.cs">
       <DependentUpon>RenderDisplay.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\TimeLine.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ValueSlider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -101,6 +105,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\TimeLine.xaml.cs">
+      <DependentUpon>TimeLine.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ValueSlider.xaml.cs">
       <DependentUpon>ValueSlider.xaml</DependentUpon>

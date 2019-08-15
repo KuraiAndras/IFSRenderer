@@ -68,10 +68,16 @@
                 
             </md:Card>
         </Grid>
+        <!-- Animation -->
         <md:Card Grid.Row="2" Padding="6" Margin="8" VerticalAlignment="Stretch">
-            <StackPanel>
-                <TextBlock Text="Animation" Margin="4 0 0 0"  Foreground="Gray" FontWeight="Bold" Style="{DynamicResource MaterialDesignTitleTextBlock}" />
-            </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Animation" Margin="4 0 0 0"  Foreground="Gray" FontWeight="Bold" Style="{DynamicResource MaterialDesignTitleTextBlock}" />
+                <local:TimeLine Grid.Row="1"/>
+            </Grid>
         </md:Card>
     </Grid>
 </Window>

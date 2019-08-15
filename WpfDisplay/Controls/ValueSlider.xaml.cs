@@ -80,7 +80,8 @@ namespace WpfDisplay.Controls
 
         private void Animate_Click(object sender, RoutedEventArgs e)
         {
-           ((RendererGL)DataContext).AnimationManager.AddNewAnimation(SetValue);
+            ((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewAnimation(SetValue);
+            
         }
 
         private void ValueEditor_KeyDown(object sender, KeyEventArgs e)

@@ -8,7 +8,7 @@ namespace IFSEngine.Animation
 {
     public class AnimationManager
     {
-        private List<PropertyAnimation> animations;
+        private List<PropertyAnimation> animations= new List<PropertyAnimation>();
 
         public void AddNewAnimation(Action<float> applyAction)
         {
@@ -16,6 +16,7 @@ namespace IFSEngine.Animation
             
             animations[0].AnimationCurve.AddControlPoint(new ControlPoint{t = 0f,Value = 0f});
             animations[0].AnimationCurve.AddControlPoint(new ControlPoint{t = 10f,Value = 100f});
+            animations[0].Animate(5f);
         }
 
         public void PlayAnimation()
