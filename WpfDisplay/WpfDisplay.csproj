@@ -87,10 +87,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Animation\DopeButton.xaml.cs">
+      <DependentUpon>DopeButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RenderDisplay.xaml.cs">
       <DependentUpon>RenderDisplay.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\TimeLine.xaml">
+    <Page Include="Controls\Animation\DopeButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Animation\TimeLine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,7 +113,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\TimeLine.xaml.cs">
+    <Compile Include="Controls\Animation\TimeLine.xaml.cs">
       <DependentUpon>TimeLine.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ValueSlider.xaml.cs">
@@ -115,6 +122,7 @@
     <Compile Include="Converters\BetterBoolToVisibilityConverter.cs" />
     <Compile Include="Converters\BooleanConverter.cs" />
     <Compile Include="Converters\DoubleStringFormatConverter.cs" />
+    <Compile Include="Converters\MathConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

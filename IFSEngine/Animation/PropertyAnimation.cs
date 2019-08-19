@@ -13,9 +13,9 @@ namespace IFSEngine.Animation
         {
             this.ApplyValue = ApplyValue;
         }
-        public void Animate(float t)
+        public void Animate(double t)
         {
-            ApplyValue(AnimationCurve.Evaluate(t));
+            ApplyValue((float)AnimationCurve.Evaluate(t));
         }
     }
 }

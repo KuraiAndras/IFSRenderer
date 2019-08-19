@@ -15,7 +15,7 @@ namespace IFSEngine.Animation
             controlPoints.Add(newPoint);
             controlPoints.Sort((x,y)=>x.t<y.t?-1:1);
         }
-        public float Evaluate(float t)
+        public double Evaluate(double t)
         {
             return curveImplementation.Evaluate(t, controlPoints);
         }
