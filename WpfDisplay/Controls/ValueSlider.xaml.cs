@@ -24,7 +24,7 @@ namespace WpfDisplay.Controls
     public partial class ValueSlider : UserControl
     {
         //TODO: implement optional Min and Max properties
-
+        
         public string ValueName
         {
             get { return (string)GetValue(ValueNameProperty); }
@@ -32,7 +32,7 @@ namespace WpfDisplay.Controls
         }
         public static readonly DependencyProperty ValueNameProperty =
             DependencyProperty.Register("ValueName", typeof(string), typeof(ValueSlider), new PropertyMetadata("ValueName"));
-        
+
         public double Value
         {
             get { return (double)GetValue(ValueProperty); }
@@ -40,7 +40,7 @@ namespace WpfDisplay.Controls
         }
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(double), typeof(ValueSlider), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
-        
+
         public double Increment
         {
             get { return (double)GetValue(IncrementProperty); }
@@ -57,7 +57,7 @@ namespace WpfDisplay.Controls
         }
         public static readonly DependencyProperty EditingProperty =
             DependencyProperty.Register("Editing", typeof(bool), typeof(ValueSlider), new PropertyMetadata(false));
-        
+
         public ValueSlider()
         {
             InitializeComponent();
@@ -81,12 +81,11 @@ namespace WpfDisplay.Controls
         private void Animate_Click(object sender, RoutedEventArgs e)
         {
             ((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewAnimation(SetValue);
-            
         }
 
         private void ValueEditor_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key==Key.Enter)
+            if (e.Key == Key.Enter)
                 Editing = false;
         }
 
@@ -108,10 +107,10 @@ namespace WpfDisplay.Controls
 
         private void Button_MouseMove(object sender, MouseEventArgs e)
         {
-            if(dragging)
+            if (dragging)
             {
                 double delta = (e.GetPosition(this).X - dragp);
-                Value = lastv + delta*Increment;
+                Value = lastv + delta * Increment;
             }
         }
 
@@ -120,7 +119,7 @@ namespace WpfDisplay.Controls
             dragging = false;
             double delta = (e.GetPosition(this).X - dragp);
 
-            if (Math.Abs(delta)<1)
+            if (Math.Abs(delta) < 1)
             {//click
                 Editing = true;
                 ValueEditor.Focus();
@@ -129,7 +128,7 @@ namespace WpfDisplay.Controls
 
         private void Button_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Value = Math.Round(Value + (double)e.Delta/Math.Abs(e.Delta)*Increment, 3);
+            Value = Math.Round(Value + (double)e.Delta / Math.Abs(e.Delta) * Increment, 3);
         }
     }
 }

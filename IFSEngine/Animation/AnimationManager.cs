@@ -8,15 +8,28 @@ namespace IFSEngine.Animation
 {
     public class AnimationManager
     {
-        private List<PropertyAnimation> animations = new List<PropertyAnimation>();
+        public delegate void AnimationCreatedHandler();
+        public delegate void ControlPointCreatedHandler(ControlPoint controlPoint,double animationDuration);
 
+        public event AnimationCreatedHandler OnAnimationCreated;
+        public event ControlPointCreatedHandler OnControlPointCreated;
+        private List<PropertyAnimation> animations = new List<PropertyAnimation>();
+        private PropertyAnimation currentAnimation;
         public void AddNewAnimation(Action<float> applyAction)
         {
             animations.Add(new PropertyAnimation(applyAction));
+            currentAnimation = animations[animations.Count - 1];
+            OnAnimationCreated?.Invoke();
 
-            animations[animations.Count - 1].AnimationCurve.AddControlPoint(new ControlPoint { t = 0, Value = 0f });
-            animations[animations.Count - 1].AnimationCurve.AddControlPoint(new ControlPoint { t = 10, Value = 10f });
-            //animations[0].Animate(5f);
+            CreateControlPoint(0f, 0f);
+            CreateControlPoint(10f, 10f);
+        }
+
+        private void CreateControlPoint(in float timeInSeconds,in float value)
+        {
+            var newCP = new ControlPoint { t = timeInSeconds, Value = value };
+            currentAnimation.AnimationCurve.AddControlPoint(newCP);
+            OnControlPointCreated?.Invoke(newCP, currentAnimation.AnimationCurve.GetDuration());
         }
 
         public void PlayAnimation()
@@ -24,7 +37,7 @@ namespace IFSEngine.Animation
 
         }
 
-        public void EvaluateAt(double timeInSeconds)
+        public void EvaluateAt(in double timeInSeconds)
         {
             for (int i = 0; i < animations.Count; i++)
             {

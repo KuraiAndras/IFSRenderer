@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IFSEngine.Animation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,18 @@ namespace WpfDisplay.Controls.Animation
     /// </summary>
     public partial class DopeButton : UserControl
     {
+        private TimeLine timeLine;
+        private ControlPoint controlPoint;
         public DopeButton()
         {
+            Loaded += (s, e) =>
+            {
+
+            };
             InitializeComponent();
         }
+
+        public void SetControlPoint(ControlPoint controlPoint) => this.controlPoint = controlPoint;
+
     }
 }

@@ -20,13 +20,17 @@
         </Grid.RowDefinitions>
         <Button Grid.Row="0" 
                 Style="{DynamicResource MaterialDesignRaisedDarkButton}" 
-                Height="{Binding ElementName=DopesheetButtonContainer, Path=ActualWidth,Converter={StaticResource mathConverter},
-                ConverterParameter=((@VALUE)*.7)}" 
-                Width="{Binding ElementName=DopesheetButtonContainer, Path=ActualWidth,Converter={StaticResource mathConverter},
-                ConverterParameter=((@VALUE)*.7)}">
+                Height="20"
+                Width="20"
+                
+            >
             <Button.LayoutTransform>
                 <RotateTransform CenterX="0.5" CenterY="0.5" Angle="45"/>
             </Button.LayoutTransform>
         </Button>
     </Grid>
 </UserControl>
+<!--Height="{Binding ElementName=DopesheetButtonContainer, Path=ActualWidth,Converter={StaticResource mathConverter},
+                ConverterParameter=((@VALUE)*.7)}" 
+                Width="{Binding ElementName=DopesheetButtonContainer, Path=ActualWidth,Converter={StaticResource mathConverter},
+                ConverterParameter=((@VALUE)*.7)}"-->

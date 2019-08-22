@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using IFSEngine;
 using IFSEngine.Helper;
 using IFSEngine.Animation;
+using WpfDisplay.Controls.Animation;
 
 namespace WpfDisplay.Controls
 {
@@ -24,8 +25,8 @@ namespace WpfDisplay.Controls
     /// </summary>
     public partial class TimeLine : UserControl
     {
-        private const double activeAreaStart = 0.01;
-        private const double activeAreaEnd = 0.99;
+        private static double activeAreaStart = 0.01;
+        private static double activeAreaEnd = 0.99;
 
         private AnimationManager animationManager;
         private bool isMouseDown = false;
@@ -37,7 +38,20 @@ namespace WpfDisplay.Controls
             Loaded += (s, e) =>
             {
                 animationManager = ((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager;
+                animationManager.OnControlPointCreated += CreateDopeSheetPoint;
                 CreateLines();
+
+                void CreateDopeSheetPoint(ControlPoint cp, double animationDuration)
+                {
+                    var dpPoint = new DopeButton();
+                    dpPoint.SetControlPoint(cp);
+                    Canvas.SetTop(dpPoint, 0);
+                    Dopesheet.Children.Add(dpPoint);
+
+                    dpPoint.Loaded +=(e2,v)=>{
+                        Canvas.SetLeft(dpPoint, MapToActiveArea(cp.t / animationDuration) * Dopesheet.ActualWidth - dpPoint.ActualWidth / 2);
+                    };
+                }
 
                 void CreateLines()
                 {
@@ -115,8 +129,13 @@ namespace WpfDisplay.Controls
             InitializeComponent();
         }
 
-        private double MapToActiveArea(double normalizedOriginalValue) => normalizedOriginalValue.Remap(0, 1, activeAreaStart, activeAreaEnd);
-        private double MapFromActiveArea(double normalizedOriginalValue) => normalizedOriginalValue.Remap(activeAreaStart, activeAreaEnd, 0, 1);
+        public void AddAnimation()
+        {
+
+        }
+
+        public static double MapToActiveArea(double normalizedOriginalValue) => normalizedOriginalValue.Remap(0, 1, activeAreaStart, activeAreaEnd);
+        public static double MapFromActiveArea(double normalizedOriginalValue) => normalizedOriginalValue.Remap(activeAreaStart, activeAreaEnd, 0, 1);
 
 
         private void TimeSlider_MouseWheel(object sender, MouseWheelEventArgs e)
