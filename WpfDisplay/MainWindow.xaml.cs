@@ -63,7 +63,7 @@ namespace WpfDisplay
         {
             renderer.CurrentParams = IFS.LoadJson("tmp.json");
             renderer.ActiveView = renderer.CurrentParams.Views.First();
-            renderer.ActiveView.Camera.OnManipulate += renderer.InvalidateAccumulation;//ez igy bena
+            //renderer.ActiveView.Camera.OnManipulate += renderer.InvalidateAccumulation;//ez igy bena
             renderer.InvalidateParams();
             //szebb lenne pl.
             //renderer.LoadParams(IFS.LoadJson("tmp.json"), [ActiveView=0]);
@@ -75,5 +75,12 @@ namespace WpfDisplay
             renderer.ActiveView = renderer.CurrentParams.Views[nextviewcnt++ % renderer.CurrentParams.Views.Count];
             renderer.InvalidateAccumulation();
         }
+
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            renderer.CurrentParams.Palette = UFPalette.FromFile(@"Resources\example.gradient")[0];
+            renderer.InvalidateParams();
+        }
+
     }
 }
