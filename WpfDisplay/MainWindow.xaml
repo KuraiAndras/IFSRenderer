@@ -15,6 +15,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}" WindowState="Maximized"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:animation="clr-namespace:WpfDisplay.Controls.Animation"
         x:Name="mainWindow"
         >
     <Grid>
@@ -77,7 +78,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Animation" Margin="4 0 0 0"  Foreground="Gray" FontWeight="Bold" Style="{DynamicResource MaterialDesignTitleTextBlock}" />
-                <local:TimeLine Grid.Row="1"/>
+                <animation:AnimationPanel Grid.Row="1"/>
             </Grid>
         </md:Card>
     </Grid>

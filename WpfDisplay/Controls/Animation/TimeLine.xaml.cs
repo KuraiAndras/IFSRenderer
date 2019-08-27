@@ -18,7 +18,7 @@ using IFSEngine.Helper;
 using IFSEngine.Animation;
 using WpfDisplay.Controls.Animation;
 
-namespace WpfDisplay.Controls
+namespace WpfDisplay.Controls.Animation
 {
     /// <summary>
     /// Interaction logic for TimeLine.xaml
@@ -38,19 +38,28 @@ namespace WpfDisplay.Controls
             Loaded += (s, e) =>
             {
                 animationManager = ((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager;
-                animationManager.OnControlPointCreated += CreateDopeSheetPoint;
+                animationManager.OnControlPointCreated += OnControlPointCreatedHandler;
                 CreateLines();
 
-                void CreateDopeSheetPoint(ControlPoint cp, double animationDuration)
+                void OnControlPointCreatedHandler(ControlPoint cp, double animationDuration)
                 {
                     var dpPoint = new DopeButton();
                     dpPoint.SetControlPoint(cp);
+                    dpPoint.OnDrag += OnDopePointDrag;
                     Canvas.SetTop(dpPoint, 0);
                     Dopesheet.Children.Add(dpPoint);
-
+                    
                     dpPoint.Loaded +=(e2,v)=>{
                         Canvas.SetLeft(dpPoint, MapToActiveArea(cp.t / animationDuration) * Dopesheet.ActualWidth - dpPoint.ActualWidth / 2);
                     };
+
+                    void OnDopePointDrag(object sender, MouseEventArgs ea)
+                    {
+                        var dopeButton = (DopeButton) sender;
+                        var current = Canvas.GetLeft(dopeButton);
+                        var next = ea.GetPosition(this);
+                        //TODO
+                    }
                 }
 
                 void CreateLines()

@@ -1,5 +1,4 @@
-﻿using IFSEngine.Animation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,18 +16,13 @@ using System.Windows.Shapes;
 namespace WpfDisplay.Controls.Animation
 {
     /// <summary>
-    /// Interaction logic for DopeButton.xaml
+    /// Interaction logic for AnimationPanel.xaml
     /// </summary>
-    public partial class DopeButton : UserControl
+    public partial class AnimationPanel : UserControl
     {
-        public ControlPoint ControlPoint { get; private set; }
-        public EventHandler<MouseEventArgs> OnDrag;
-        public DopeButton()
+        public AnimationPanel()
         {
             InitializeComponent();
         }
-
-        public void SetControlPoint(ControlPoint controlPoint) => this.ControlPoint = controlPoint;
-
     }
 }

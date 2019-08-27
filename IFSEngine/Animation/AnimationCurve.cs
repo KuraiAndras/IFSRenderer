@@ -20,7 +20,7 @@ namespace IFSEngine.Animation
             return curveImplementation.Evaluate(t, controlPoints);
         }
 
-        public double GetDuration() => controlPoints.Count == 1 ? 10 : controlPoints[controlPoints.Count - 1].t;
+        public double GetDuration() => controlPoints.Count == 1 ? 10 : (double) controlPoints[controlPoints.Count - 1].t;
 
     }
 }

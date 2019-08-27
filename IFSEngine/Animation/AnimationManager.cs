@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using IFSEngine.Helper;
 
 namespace IFSEngine.Animation
 {
@@ -25,9 +26,9 @@ namespace IFSEngine.Animation
             CreateControlPoint(10f, 10f);
         }
 
-        private void CreateControlPoint(in float timeInSeconds,in float value)
+        private void CreateControlPoint(in double timeInSeconds,in double value)
         {
-            var newCP = new ControlPoint { t = timeInSeconds, Value = value };
+            var newCP = new ControlPoint { t = new ChangeDetector<double>(timeInSeconds) , Value = new ChangeDetector<double>(value) };
             currentAnimation.AnimationCurve.AddControlPoint(newCP);
             OnControlPointCreated?.Invoke(newCP, currentAnimation.AnimationCurve.GetDuration());
         }

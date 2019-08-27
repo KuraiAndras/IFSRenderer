@@ -87,12 +87,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Animation\AnimationControlPanel.xaml.cs">
+      <DependentUpon>AnimationControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Animation\AnimationPanel.xaml.cs">
+      <DependentUpon>AnimationPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Animation\DopeButton.xaml.cs">
       <DependentUpon>DopeButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RenderDisplay.xaml.cs">
       <DependentUpon>RenderDisplay.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\Animation\AnimationControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Animation\AnimationPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Animation\DopeButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
