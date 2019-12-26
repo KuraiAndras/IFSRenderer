@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Text;
 
 namespace IFSEngine.Model
@@ -17,20 +18,25 @@ namespace IFSEngine.Model
     /// </remarks>
     public class IFSView : INotifyPropertyChanged
     {
-        private float brightness = 1.0f;
-        private float gamma = 4.0f;
-        private float fogEffect = 2.0f;
-        private float dof = 0.05f;
-        private float focusDistance = 2.0f;
-        private float focusArea = 0.25f;
+        private double brightness = 1.0;
+        private double gamma = 1.0;
+        private double gammaThreshold = 0.0;
+        private double vibrancy = 1.0;
+        private double fogEffect = 0.0;
+        private double dof = 0.0;
+        private double focusDistance = 2.0;
+        private double focusArea = 0.25;
         private CameraBase camera;
+        private Color bgColor = Color.Black;
+        private Size imageResolution = new Size(1920,1080);
 
         public IFSView()
         {
             Camera = new QuatCamera();
         }
 
-        public CameraBase Camera {
+        public CameraBase Camera
+        {
             get => camera;
             set
             {
@@ -38,10 +44,17 @@ namespace IFSEngine.Model
                 camera.OnManipulate += () => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("1"));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("1"));
             }
-    }
-        //public float Width { get; set; } = 1920;
-        //public float Height { get; set; } = 1080; //stays in camera for now because of fov
-        public float Brightness
+        }
+        public Size ImageResolution
+        {
+            get => imageResolution;
+            set
+            {
+                imageResolution = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("1"));
+            }
+        }
+        public double Brightness
         {
             get => brightness;
             set
@@ -50,7 +63,7 @@ namespace IFSEngine.Model
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("0"));
             }
         }
-        public float Gamma
+        public double Gamma
         {
             get => gamma;
             set
@@ -59,7 +72,25 @@ namespace IFSEngine.Model
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("0"));
             }
         }
-        public float FogEffect
+        public double GammaThreshold
+        {
+            get => gammaThreshold;
+            set
+            {
+                gammaThreshold = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("0"));
+            }
+        }
+        public double Vibrancy
+        {
+            get => vibrancy;
+            set
+            {
+                vibrancy = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("0"));
+            }
+        }
+        public double FogEffect
         {
             get => fogEffect;
             set
@@ -68,7 +99,7 @@ namespace IFSEngine.Model
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("1"));
             }
         }
-        public float Dof
+        public double Dof
         {
             get => dof;
             set
@@ -77,7 +108,7 @@ namespace IFSEngine.Model
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("1"));
             }
         }
-        public float FocusDistance
+        public double FocusDistance
         {
             get => focusDistance;
             set
@@ -86,7 +117,7 @@ namespace IFSEngine.Model
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("1"));
             }
         }
-        public float FocusArea
+        public double FocusArea
         {
             get => focusArea;
             set
@@ -96,18 +127,21 @@ namespace IFSEngine.Model
             }
         }
 
+        public System.Drawing.Color BackgroundColor
+        {
+            get => bgColor;
+            set
+            {
+                bgColor = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("0"));
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void ResetCamera()
         {
-            //HACK: remember resolution
-            int w = Camera.Width;
-            int h = Camera.Height;
-
             Camera = new QuatCamera();
-
-            Camera.Width = w;
-            Camera.Height = h;
         }
     }
 }

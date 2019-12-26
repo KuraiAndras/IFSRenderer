@@ -1,31 +1,12 @@
 ﻿using IFSEngine;
 using IFSEngine.Model;
-using OpenTK;
-using System;
-using System.Collections.Generic;
+using IFSEngine.Util;
+using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Xceed.Wpf.Toolkit;
-using Xceed.Wpf.Toolkit.Primitives;
-
 namespace WpfDisplay
 {
-    //TODO: implement previously working functionality:
-    //Buttons: Start/Stop render, Randomize, Save Image
-    //Numeric: Brightness, Gamma, DOF, Fog, Focus Distance
-    //Image saving
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -42,6 +23,7 @@ namespace WpfDisplay
                 this.DataContext = renderer;
 
             };
+            this.Closing += (s2, e2) => renderer.Dispose();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -51,7 +33,7 @@ namespace WpfDisplay
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            renderer.Reset();
+            renderer.LoadParams(new IFS(true));
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -61,25 +43,45 @@ namespace WpfDisplay
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            renderer.CurrentParams = IFS.LoadJson("tmp.json");
-            renderer.ActiveView = renderer.CurrentParams.Views.First();
-            //renderer.ActiveView.Camera.OnManipulate += renderer.InvalidateAccumulation;//ez igy bena
-            renderer.InvalidateParams();
-            //szebb lenne pl.
-            //renderer.LoadParams(IFS.LoadJson("tmp.json"), [ActiveView=0]);
+            renderer.LoadParams(IFS.LoadJson("tmp.json"));
         }
 
-        int nextviewcnt = 1;
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            renderer.ActiveView = renderer.CurrentParams.Views[nextviewcnt++ % renderer.CurrentParams.Views.Count];
-            renderer.InvalidateAccumulation();
+            renderer.SetRenderScale(0.1f);
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-            renderer.CurrentParams.Palette = UFPalette.FromFile(@"Resources\example.gradient")[0];
+            renderer.CurrentParams.Palette = UFPalette.FromFile(@"Resources\example.gradient")[RandHelper.Next(8)];
             renderer.InvalidateParams();
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            renderer.CurrentParams.AddIterator(Iterator.RandomIterator, true);
+            renderer.InvalidateParams();
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            renderer.CurrentParams.RemoveIterator(renderer.CurrentParams.Iterators.Last());
+            renderer.InvalidateParams();
+        }
+
+        private async void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            var p = await renderer.GenerateImage();
+            Bitmap b = new Bitmap(renderer.RenderWidth, renderer.RenderHeight);
+            await Task.Run(() =>
+            {
+                for (int y = 0; y < renderer.RenderHeight; y++)
+                    for (int x = 0; x < renderer.RenderWidth; x++)
+                    {
+                        b.SetPixel(x, renderer.RenderHeight - y - 1, System.Drawing.Color.FromArgb((int)(255.0 * p[x, y][3]), (int)(255.0 * p[x, y][0]), (int)(255.0 * p[x, y][1]), (int)(255.0 * p[x, y][2])));
+                    }
+                b.Save("Output.png", System.Drawing.Imaging.ImageFormat.Png);
+            });
         }
 
     }

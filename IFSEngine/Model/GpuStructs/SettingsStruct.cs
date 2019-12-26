@@ -1,11 +1,11 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
-namespace IFSEngine.Model
+namespace IFSEngine.Model.GpuStructs
 {
-    internal struct Settings
+    internal struct SettingsStruct
     {
         //current view:
         internal CameraBaseParameters CameraBase;
@@ -17,7 +17,7 @@ namespace IFSEngine.Model
         //current frame:
         internal int itnum;//length of iterators - 1 (last one is finalit)
         internal int pass_iters;//iterations per pass
-        internal int framestep;
+        internal int dispatchCnt;//number of dispatches since accumulation reset
         internal int palettecnt;//how many colors in the palette
     }
 }

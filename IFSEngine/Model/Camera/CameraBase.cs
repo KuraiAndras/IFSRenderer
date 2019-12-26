@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using IFSEngine.Helper;
-using OpenTK;
+using System.Numerics;
 
 namespace IFSEngine.Model.Camera
 {
@@ -10,8 +10,10 @@ namespace IFSEngine.Model.Camera
     {
         internal CameraBaseParameters Params = new CameraBaseParameters();
         public event Action OnManipulate;
-        public int Width { get; set; } = 1920;
-        public int Height { get; set; } = 1080;
+
+        //?
+        public float AspectRatio { get; set; } = 1.0f;
+
         public float MovementSpeed { get; set; } = 2.5f;
         public float Sensitivity { get; set; } = 0.2f;
         public float FOV
@@ -20,25 +22,26 @@ namespace IFSEngine.Model.Camera
             set
             {
                 fov = value;
-                projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(NumericExtensions.ToRadians(FOV), (float)Width / (float)Height, 0.2f, 100.0f);
+                //TODO: this should be in UpdateCamera (?)
+                projectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(NumericExtensions.ToRadians(FOV), AspectRatio, 0.2f, 100.0f);
             }
         }
         private float fov = 30;
 
         // Camera 3D Attributes
-        protected Vector3 position
+        public Vector3 position
         {
-            get => Params.position.Xyz;
+            get => new Vector3(Params.position.X, Params.position.Y, Params.position.Z);
             set => Params.position = new Vector4(value, 1.0f);
         }
         protected Vector3 forward
         {
-            get => Params.forward.Xyz;
+            get => new Vector3(Params.forward.X, Params.forward.Y, Params.forward.Z);
             set => Params.forward = new Vector4(value, 1.0f);
         }
         protected Vector3 up;
         protected Vector3 right;
-        protected Matrix4 projectionMatrix;
+        protected Matrix4x4 projectionMatrix;
 
         public CameraBase() : this(new Vector3(0.0f, 0.0f, -2.0f), new Vector3(0.0f, 0.0f, 1.0f), new Vector3(1.0f, 0.0f, 0.0f), new Vector3(0.0f,1.0f,0.0f), 60.0f)
         {
@@ -65,7 +68,6 @@ namespace IFSEngine.Model.Camera
         // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
         public abstract void ProcessMouseMovement(float xoffset, float yoffset);
 
-        // Calculates the front vector from the Camera's (updated) Euler Angles
         public void UpdateCamera()
         {
             RefreshCameraValues();
@@ -75,7 +77,6 @@ namespace IFSEngine.Model.Camera
 
         protected abstract void RefreshCameraValues();
 
-        // Returns the view matrix
         protected abstract void SetViewProjMatrix();
     }
 }

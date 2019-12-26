@@ -1,6 +1,7 @@
 ﻿using IFSEngine;
 using IFSEngine.Model;
 using OpenTK;
+using OpenTK.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfDisplay.Helper;
 
 namespace WpfDisplay.Controls
 {
@@ -32,38 +34,48 @@ namespace WpfDisplay.Controls
         public int FPS { get; set; }
 
         private GLControl display1;
+        private KeyboardController kbc;
+
+        IGraphicsContext ctx;
 
         public RenderDisplay()
         {
             InitializeComponent();
-
+            
             Loaded += me_Loaded;
+            kbc = new KeyboardController(this);
+            kbc.KeyboardTick += KeydownHandler;
             //me_Loaded();
 
         }
 
         private void me_Loaded(object sender, RoutedEventArgs e)
-        {
-            Window.GetWindow(this).Closing += (s2, e2) => Renderer.Dispose();
-            //vagy this.Unloaded+=
-            
+        {            
             //Init GL Control
             OpenTK.Toolkit.Init();
             display1 = new OpenTK.GLControl();
-            var renderedPixels = GetElementPixelSize(this);
-            display1.Width = (int)renderedPixels.Width;
-            display1.Height = (int)renderedPixels.Height;
+            var displayedResolution = GetElementPixelSize(this);
+            display1.Width = (int)displayedResolution.Width;
+            display1.Height = (int)displayedResolution.Height;
             display1.Left = 0;
             display1.Top = 0;
             //display1.PreviewKeyDown += KeyDown_Custom;
             display1.MouseMove += Display1_MouseMove;
-            display1.MakeCurrent();
+            display1.MouseWheel += Display1_MouseWheel;
             this.Child = display1;
 
-            IFS Params = new IFS();
-            Renderer = new RendererGL(Params, display1.Width, display1.Height);//TODO: separate render and view resolutions, make it dynamic
+            display1.MakeCurrent();
+            ctx = new GraphicsContext(GraphicsMode.Default, display1.WindowInfo);
+            Renderer = new RendererGL(ctx, display1.WindowInfo);
+            Renderer.SetDisplayResolution(display1.Width, display1.Height);
+            display1.Context.MakeCurrent(null);//
 
             Renderer.DisplayFrameCompleted += R_DisplayFrameCompleted;
+        }
+
+        private void Display1_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            Renderer.CurrentParams.ViewSettings.FocusDistance += e.Delta * Renderer.CurrentParams.ViewSettings.FocusDistance * 0.001;
         }
 
         public Size GetElementPixelSize(UIElement element)
@@ -85,10 +97,10 @@ namespace WpfDisplay.Controls
         Stopwatch fpsCounter = new Stopwatch();
         private void R_DisplayFrameCompleted(object sender, EventArgs e)
         {
-            display1.MakeCurrent();//render thread gets the context
-            display1.SwapBuffers();
-            fpsCounter.Stop();
+            ctx.MakeCurrent(display1.WindowInfo);
+            ctx.SwapBuffers();
             FPS = (int)(fpsCounter.ElapsedMilliseconds > 0 ? 1000 / (fpsCounter.ElapsedMilliseconds) : 0);
+            fpsCounter.Stop();
             fpsCounter.Restart();
             //TODO: update fps view: NotifyPropertyChanged mashol, vagy itt Dispatcher.Invoke(()=>{ ... });
         }
@@ -99,50 +111,49 @@ namespace WpfDisplay.Controls
         {
             if (e.Button == MouseButtons.Left)
             {
-                Renderer.ActiveView.Camera.ProcessMouseMovement((e.X - lastX), (lastY - e.Y));
+                Renderer.CurrentParams.ViewSettings.Camera.ProcessMouseMovement((e.X - lastX), (lastY - e.Y));
             }
             lastX = e.X;
             lastY = e.Y;
         }
 
-        private void WindowsFormsHost_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void KeydownHandler(object sender, EventArgs e)
         {
-            //TODO: replace these with gui
-            if (Keyboard.IsKeyDown(Key.R))
-                Renderer.Reset();
-            if (Keyboard.IsKeyDown(Key.Space))
+            if (kbc.IsKeyDown(Key.R))
+                Renderer.LoadParams(new IFS(true));
+            if (kbc.IsKeyDown(Key.Space))
                 Renderer.StartRendering();
 
             if (
                //translate
-               Keyboard.IsKeyDown(Key.W) ||
-               Keyboard.IsKeyDown(Key.S) ||
-               Keyboard.IsKeyDown(Key.D) ||
-               Keyboard.IsKeyDown(Key.A) ||
-               Keyboard.IsKeyDown(Key.Q) ||
-               Keyboard.IsKeyDown(Key.E) ||
-               Keyboard.IsKeyDown(Key.C) ||
+               kbc.IsKeyDown(Key.W) ||
+               kbc.IsKeyDown(Key.S) ||
+               kbc.IsKeyDown(Key.D) ||
+               kbc.IsKeyDown(Key.A) ||
+               kbc.IsKeyDown(Key.Q) ||
+               kbc.IsKeyDown(Key.E) ||
+               kbc.IsKeyDown(Key.C) ||
                //rotate
-               Keyboard.IsKeyDown(Key.I) ||
-               Keyboard.IsKeyDown(Key.K) ||
-               Keyboard.IsKeyDown(Key.J) ||
-               Keyboard.IsKeyDown(Key.L) ||
-               Keyboard.IsKeyDown(Key.U) ||
-               Keyboard.IsKeyDown(Key.O))
+               kbc.IsKeyDown(Key.I) ||
+               kbc.IsKeyDown(Key.K) ||
+               kbc.IsKeyDown(Key.J) ||
+               kbc.IsKeyDown(Key.L) ||
+               kbc.IsKeyDown(Key.U) ||
+               kbc.IsKeyDown(Key.O))
             {
-                var translateVector = new Vector3(
-                    0.02f * ((Keyboard.IsKeyDown(Key.W) ? 1 : 0) - (Keyboard.IsKeyDown(Key.S) ? 1 : 0)),
-                    0.02f * ((Keyboard.IsKeyDown(Key.D) ? 1 : 0) - (Keyboard.IsKeyDown(Key.A) ? 1 : 0)),
-                    0.02f * ((Keyboard.IsKeyDown(Key.E) ? 1 : 0) - ((Keyboard.IsKeyDown(Key.C) || Keyboard.IsKeyDown(Key.Q)) ? 1 : 0))
+                var translateVector = new System.Numerics.Vector3(
+                    (float)Renderer.CurrentParams.ViewSettings.FocusDistance * 0.01f * ((kbc.IsKeyDown(Key.W) ? 1 : 0) - (kbc.IsKeyDown(Key.S) ? 1 : 0)),
+                    (float)Renderer.CurrentParams.ViewSettings.FocusDistance * 0.01f * ((kbc.IsKeyDown(Key.D) ? 1 : 0) - (kbc.IsKeyDown(Key.A) ? 1 : 0)),
+                    (float)Renderer.CurrentParams.ViewSettings.FocusDistance * 0.01f * ((kbc.IsKeyDown(Key.E) ? 1 : 0) - ((kbc.IsKeyDown(Key.C) || kbc.IsKeyDown(Key.Q)) ? 1 : 0))
                 );
-                Renderer.ActiveView.Camera.Translate(translateVector);
+                Renderer.CurrentParams.ViewSettings.Camera.Translate(translateVector);
 
-                float pitchd = 0.05f * ((Keyboard.IsKeyDown(Key.I) ? 1 : 0) - (Keyboard.IsKeyDown(Key.K) ? 1 : 0));
-                float yawd = 0.05f * ((Keyboard.IsKeyDown(Key.J) ? 1 : 0) - (Keyboard.IsKeyDown(Key.L) ? 1 : 0));
-                float rolld = 0.05f * ((Keyboard.IsKeyDown(Key.O) ? 1 : 0) - (Keyboard.IsKeyDown(Key.U) ? 1 : 0));
-                (Renderer.ActiveView.Camera as IFSEngine.Model.Camera.QuatCamera)?.RotateBy(yawd,pitchd,rolld);//HACK: Camera api tervezni (baseclass / interfacek / ..)
+                float pitchd = 0.05f * ((kbc.IsKeyDown(Key.I) ? 1 : 0) - (kbc.IsKeyDown(Key.K) ? 1 : 0));
+                float yawd = 0.05f * ((kbc.IsKeyDown(Key.J) ? 1 : 0) - (kbc.IsKeyDown(Key.L) ? 1 : 0));
+                float rolld = 0.05f * ((kbc.IsKeyDown(Key.O) ? 1 : 0) - (kbc.IsKeyDown(Key.U) ? 1 : 0));
+                (Renderer.CurrentParams.ViewSettings.Camera as IFSEngine.Model.Camera.QuatCamera)?.RotateBy(yawd,pitchd,rolld);//HACK: Camera api tervezni (baseclass / interfacek / ..)
 
-                Renderer.ActiveView.Camera.UpdateCamera();//szinten a Mutate-es sztori..
+                Renderer.CurrentParams.ViewSettings.Camera.UpdateCamera();//szinten a Mutate-es sztori..
             }
         }
 
