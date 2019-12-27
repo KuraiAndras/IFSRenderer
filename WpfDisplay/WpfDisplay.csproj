@@ -98,16 +98,16 @@
     <Compile Include="Controls\Animation\Timeline\Animation.xaml.cs">
       <DependentUpon>Animation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Animation\AnimationControlPanel.xaml.cs">
+    <Compile Include="Controls\Animation\Control\AnimationControlPanel.xaml.cs">
       <DependentUpon>AnimationControlPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Animation\AnimationPanel.xaml.cs">
       <DependentUpon>AnimationPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Animation\AnimationTitle.xaml.cs">
+    <Compile Include="Controls\Animation\Control\AnimationTitle.xaml.cs">
       <DependentUpon>AnimationTitle.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Animation\AnimationTitles.xaml.cs">
+    <Compile Include="Controls\Animation\Control\AnimationTitles.xaml.cs">
       <DependentUpon>AnimationTitles.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Animation\Timeline\DopeButton.xaml.cs">
@@ -121,7 +121,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Animation\AnimationControlPanel.xaml">
+    <Page Include="Controls\Animation\Control\AnimationControlPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -129,11 +129,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Animation\AnimationTitle.xaml">
+    <Page Include="Controls\Animation\Control\AnimationTitle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Animation\AnimationTitles.xaml">
+    <Page Include="Controls\Animation\Control\AnimationTitles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -219,6 +219,14 @@
       <Name>IFSEngine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Images\Animation\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Animation\skip-forward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Animation\skip-backward.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
