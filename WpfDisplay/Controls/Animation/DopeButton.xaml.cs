@@ -23,12 +23,32 @@ namespace WpfDisplay.Controls.Animation
     {
         public ControlPoint ControlPoint { get; private set; }
         public EventHandler<MouseEventArgs> OnDrag;
+        private bool isDragging=false;
         public DopeButton()
         {
             InitializeComponent();
         }
 
         public void SetControlPoint(ControlPoint controlPoint) => this.ControlPoint = controlPoint;
+        public void SetTime(double t) => ControlPoint.t.Update(t);
 
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = true;
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && isDragging)
+            {
+                OnDrag?.Invoke(this,e);
+            }
+
+        }
+
+        private void OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = false;
+        }
     }
 }

@@ -36,7 +36,8 @@ namespace WpfDisplay.Controls
         }
         public static readonly DependencyProperty ValueNameProperty =
             DependencyProperty.Register("ValueName", typeof(string), typeof(ValueSlider), new PropertyMetadata("ValueName"));
-
+        private bool hasAnimation = false;
+        private int animationIndex;
         public double Value
         {
             get { return (double)GetValue(ValueProperty); }
@@ -113,7 +114,15 @@ namespace WpfDisplay.Controls
 
         private void Animate_Click(object sender, RoutedEventArgs e)
         {
-            ((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewAnimation(SetValue);
+            if (!hasAnimation)
+            {
+                hasAnimation = true;
+                animationIndex=((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewAnimation(SetValue, Value);
+            }
+            else
+            {
+                ((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewControlPoint(animationIndex, Value);
+            }
         }
 
         private void ValueEditor_KeyDown(object sender, KeyEventArgs e)

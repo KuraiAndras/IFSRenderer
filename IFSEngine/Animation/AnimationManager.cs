@@ -9,28 +9,41 @@ namespace IFSEngine.Animation
 {
     public class AnimationManager
     {
-        public delegate void AnimationCreatedHandler();
-        public delegate void ControlPointCreatedHandler(ControlPoint controlPoint,double animationDuration);
-
+        public delegate void AnimationCreatedHandler(AnimationCurve animationCurve);
+        public int AnimationCount => animations.Count;
+        public int CurrentAnimationId => currentAnimationId;
         public event AnimationCreatedHandler OnAnimationCreated;
-        public event ControlPointCreatedHandler OnControlPointCreated;
+        
         private List<PropertyAnimation> animations = new List<PropertyAnimation>();
         private PropertyAnimation currentAnimation;
-        public void AddNewAnimation(Action<float> applyAction)
+        private double animationSliderTime = 0;
+        private int currentAnimationId;
+        public int AddNewAnimation(Action<float> applyAction, double currentValue)
         {
             animations.Add(new PropertyAnimation(applyAction));
-            currentAnimation = animations[animations.Count - 1];
-            OnAnimationCreated?.Invoke();
+            currentAnimationId = animations.Count - 1;
+            currentAnimation = animations[currentAnimationId];
+            OnAnimationCreated?.Invoke(currentAnimation.AnimationCurve);
 
-            CreateControlPoint(0f, 0f);
-            CreateControlPoint(10f, 10f);
+            CreateControlPoint(currentValue);
+            return animations.Count - 1;
         }
 
+        public void AddNewControlPoint(in int animationId, in double value)
+        {
+            currentAnimationId = animationId;
+            currentAnimation = animations[animationId];
+            CreateControlPoint(value);
+        }
+
+        private void CreateControlPoint(in double value)
+        {
+            CreateControlPoint(animationSliderTime, value);
+        }
         private void CreateControlPoint(in double timeInSeconds,in double value)
         {
             var newCP = new ControlPoint { t = new ChangeDetector<double>(timeInSeconds) , Value = new ChangeDetector<double>(value) };
             currentAnimation.AnimationCurve.AddControlPoint(newCP);
-            OnControlPointCreated?.Invoke(newCP, currentAnimation.AnimationCurve.GetDuration());
         }
 
         public void PlayAnimation()
@@ -40,6 +53,7 @@ namespace IFSEngine.Animation
 
         public void EvaluateAt(in double timeInSeconds)
         {
+            animationSliderTime = timeInSeconds;
             for (int i = 0; i < animations.Count; i++)
             {
                 animations[i].Animate(timeInSeconds);

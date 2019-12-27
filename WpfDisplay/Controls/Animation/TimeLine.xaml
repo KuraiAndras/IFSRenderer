@@ -5,38 +5,44 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfDisplay.Controls"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:animation="clr-namespace:WpfDisplay.Controls.Animation"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Name="TimeLineLayout">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!--TimeSlider-->
-        <Canvas Grid.Row="0" Height="30" x:Name="TimeSlider"  MouseWheel="TimeSlider_MouseWheel" PreviewMouseDown="TimeSlider_PreviewMouseDown" PreviewMouseUp="TimeSlider_PreviewMouseUp" PreviewMouseMove="TimeSlider_PreviewMouseMove" Background="DarkGray" MouseLeave="TimeSlider_MouseLeave">
-            <Line x:Name="TimeSliderLine"
-                    X1="0" Y1="0"
-                    X2="0" Y2="{Binding ElementName=TimeSlider, Path=ActualHeight}"
-                    Stroke="White"
-                    StrokeThickness="2" Canvas.Left="0"/>
-        </Canvas>
-        <!--ParentDopes-->
-        <Canvas Grid.Row="1" x:Name="ParentDopes"  Background="#424242" Height="30">
-            <Line x:Name="ParentDopesheetLine"
-                    X1="0" Y1="0"
-                    X2="0" Y2="{Binding ElementName=ParentDopes, Path=ActualHeight}"
-                    Stroke="White"
-                    StrokeThickness="2" Canvas.Left="0"/>
-        </Canvas>
-        <!--TimeSlider-->
-        <Canvas Grid.Row="2" x:Name="Dopesheet"  Background="DarkGray">
-            <Line x:Name="DopesheetLine"
-                    X1="0" Y1="0"
-                    X2="0" Y2="{Binding ElementName=Dopesheet, Path=ActualHeight}"
-                    Stroke="White"
-                    StrokeThickness="2" Canvas.Left="0"/>
-        </Canvas>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!--TimeSlider-->
+            <Canvas Grid.Row="0" Height="30" x:Name="TimeSlider"  MouseWheel="TimeSlider_MouseWheel" PreviewMouseDown="TimeSlider_PreviewMouseDown" PreviewMouseUp="TimeSlider_PreviewMouseUp" PreviewMouseMove="TimeSlider_PreviewMouseMove" Background="#1f1f1f" MouseLeave="TimeSlider_MouseLeave">
 
+            </Canvas>
+            <!--ParentDopes-->
+            <Canvas Grid.Row="1" x:Name="ParentDopes"  Background="#424242" Height="30">
+
+            </Canvas>
+            <!--TimeSlider-->
+            <Canvas Grid.Row="2" x:Name="Dopesheet"  Background="#1f1f1f">
+
+            </Canvas>
+
+
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <StackPanel x:Name="AnimationStack" VerticalAlignment="Top" HorizontalAlignment="Left">
+                </StackPanel>
+            </ScrollViewer>
+
+        </Grid>
+
+        <Line Grid.Row="0" IsHitTestVisible="False" x:Name="DopesheetLine"
+                  X1="0" Y1="0"
+                  X2="0" Y2="{Binding ElementName=TimeLineLayout, Path=ActualHeight}"
+                  Stroke="Red"
+                  StrokeThickness="2" Canvas.Left="0" />
     </Grid>
 </UserControl>

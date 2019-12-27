@@ -5,8 +5,11 @@ using System.Text;
 
 namespace IFSEngine.Animation
 {
+    public delegate void ControlPointCreatedHandler(ControlPoint controlPoint, double duration);
+
     public class AnimationCurve
     {
+        public event ControlPointCreatedHandler OnControlPointCreated;
         private List<ControlPoint> controlPoints = new List<ControlPoint>();
         private ICurveImplementation curveImplementation = new LinearCurveImplementation();
 
@@ -14,13 +17,17 @@ namespace IFSEngine.Animation
         {
             controlPoints.Add(newPoint);
             controlPoints.Sort((x, y) => x.t < y.t ? -1 : 1);
+            OnControlPointCreated?.Invoke(newPoint, GetDuration());
         }
         public double Evaluate(double t)
         {
             return curveImplementation.Evaluate(t, controlPoints);
         }
 
-        public double GetDuration() => controlPoints.Count == 1 ? 10 : (double) controlPoints[controlPoints.Count - 1].t;
+        public ControlPoint GetLastControlPoint() => controlPoints[controlPoints.Count - 1];
+
+        public double GetDuration() =>
+            10; //controlPoints.Count == 0 ? 10 : (double) controlPoints[controlPoints.Count - 1].t;
 
     }
 }

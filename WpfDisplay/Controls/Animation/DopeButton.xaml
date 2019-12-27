@@ -21,7 +21,7 @@
         <Button Grid.Row="0" 
                 Style="{DynamicResource MaterialDesignRaisedDarkButton}" 
                 Height="20"
-                Width="20"
+                Width="20" PreviewMouseDown="OnMouseDown" PreviewMouseMove="OnMouseMove" PreviewMouseUp="OnMouseUp"
                 
             >
             <Button.LayoutTransform>
