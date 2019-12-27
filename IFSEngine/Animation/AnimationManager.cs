@@ -1,9 +1,6 @@
-﻿using System;
+﻿using IFSEngine.Helper;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using IFSEngine.Helper;
 
 namespace IFSEngine.Animation
 {
@@ -13,7 +10,7 @@ namespace IFSEngine.Animation
         public int AnimationCount => animations.Count;
         public int CurrentAnimationId => currentAnimationId;
         public event AnimationCreatedHandler OnAnimationCreated;
-        
+
         private List<PropertyAnimation> animations = new List<PropertyAnimation>();
         private PropertyAnimation currentAnimation;
         private double animationSliderTime = 0;
@@ -40,10 +37,19 @@ namespace IFSEngine.Animation
         {
             CreateControlPoint(animationSliderTime, value);
         }
-        private void CreateControlPoint(in double timeInSeconds,in double value)
+        private void CreateControlPoint(in double timeInSeconds, in double value)
         {
-            var newCP = new ControlPoint { t = new ChangeDetector<double>(timeInSeconds) , Value = new ChangeDetector<double>(value) };
-            currentAnimation.AnimationCurve.AddControlPoint(newCP);
+            ControlPoint cp = currentAnimation.AnimationCurve.GetPointAt(timeInSeconds);
+            if (cp == null)
+            {
+                var newCP = new ControlPoint { t = new ChangeDetector<double>(timeInSeconds), Value = new ChangeDetector<double>(value) };
+                currentAnimation.AnimationCurve.AddControlPoint(newCP);
+
+            }
+            else
+            {
+                cp.Value.Update(value);
+            }
         }
 
         public void PlayAnimation()

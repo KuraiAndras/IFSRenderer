@@ -105,30 +105,49 @@ namespace WpfDisplay.Controls
         private void Down_Click(object sender, RoutedEventArgs e)
         {
             Value = Math.Round(Value - Increment, 3);
+            UserInputAnimate();
         }
 
         private void Up_Click(object sender, RoutedEventArgs e)
         {
             Value = Math.Round(Value + Increment, 3);
+            UserInputAnimate();
+        }
+
+        private void UserInputAnimate()
+        {
+            if(hasAnimation)
+                Animate();
         }
 
         private void Animate_Click(object sender, RoutedEventArgs e)
         {
+            Animate();
+        }
+
+        private void Animate()
+        {
             if (!hasAnimation)
             {
                 hasAnimation = true;
-                animationIndex=((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewAnimation(ValueName, SetValue, Value);
+                animationIndex =
+                    ((RendererGL) Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager
+                    .AddNewAnimation(ValueName, SetValue, Value);
             }
             else
             {
-                ((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewControlPoint(animationIndex, Value);
+                ((RendererGL) Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager
+                    .AddNewControlPoint(animationIndex, Value);
             }
         }
 
         private void ValueEditor_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
+            {
                 Editing = false;
+                UserInputAnimate();
+            }
         }
 
         private void ValueEditor_LostFocus(object sender, RoutedEventArgs e)

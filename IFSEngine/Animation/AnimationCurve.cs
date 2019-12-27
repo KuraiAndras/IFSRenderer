@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace IFSEngine.Animation
@@ -25,6 +26,11 @@ namespace IFSEngine.Animation
             return curveImplementation.Evaluate(t, controlPoints);
         }
 
+        public ControlPoint GetPointAt(double t)
+        {
+                return controlPoints.FirstOrDefault(cp => Math.Abs(t - cp.t) < 0.01);
+            
+        }
         public ControlPoint GetLastControlPoint() => controlPoints[controlPoints.Count - 1];
 
         public double GetDuration() =>
