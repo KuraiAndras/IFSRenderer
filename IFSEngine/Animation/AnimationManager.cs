@@ -9,7 +9,7 @@ namespace IFSEngine.Animation
 {
     public class AnimationManager
     {
-        public delegate void AnimationCreatedHandler(AnimationCurve animationCurve);
+        public delegate void AnimationCreatedHandler(PropertyAnimation animationCurve);
         public int AnimationCount => animations.Count;
         public int CurrentAnimationId => currentAnimationId;
         public event AnimationCreatedHandler OnAnimationCreated;
@@ -18,12 +18,12 @@ namespace IFSEngine.Animation
         private PropertyAnimation currentAnimation;
         private double animationSliderTime = 0;
         private int currentAnimationId;
-        public int AddNewAnimation(Action<float> applyAction, double currentValue)
+        public int AddNewAnimation(string animatedVariableName, Action<float> applyAction, double currentValue)
         {
-            animations.Add(new PropertyAnimation(applyAction));
+            animations.Add(new PropertyAnimation(applyAction, animatedVariableName));
             currentAnimationId = animations.Count - 1;
             currentAnimation = animations[currentAnimationId];
-            OnAnimationCreated?.Invoke(currentAnimation.AnimationCurve);
+            OnAnimationCreated?.Invoke(currentAnimation);
 
             CreateControlPoint(currentValue);
             return animations.Count - 1;

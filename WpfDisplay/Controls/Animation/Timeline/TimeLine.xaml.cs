@@ -35,9 +35,9 @@ namespace WpfDisplay.Controls.Animation
                 ManipulateTime(new Point(0, 0));
 
                 animationManager.OnAnimationCreated += AnimationManagerOnAnimationCreated;
-                void AnimationManagerOnAnimationCreated(AnimationCurve animationCurve)
+                void AnimationManagerOnAnimationCreated(PropertyAnimation propertyAnimation)
                 {
-                    var animation = new Animation(animationCurve);
+                    var animation = new Animation(propertyAnimation.AnimationCurve);
                     
                     AnimationStack.Children.Add(animation);
                     animation.Width = TimeLineLayout.ActualWidth;

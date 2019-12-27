@@ -95,7 +95,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Animation\Animation.xaml.cs">
+    <Compile Include="Controls\Animation\Timeline\Animation.xaml.cs">
       <DependentUpon>Animation.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Animation\AnimationControlPanel.xaml.cs">
@@ -104,14 +104,20 @@
     <Compile Include="Controls\Animation\AnimationPanel.xaml.cs">
       <DependentUpon>AnimationPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Animation\DopeButton.xaml.cs">
+    <Compile Include="Controls\Animation\AnimationTitle.xaml.cs">
+      <DependentUpon>AnimationTitle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Animation\AnimationTitles.xaml.cs">
+      <DependentUpon>AnimationTitles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Animation\Timeline\DopeButton.xaml.cs">
       <DependentUpon>DopeButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Animation\Helper\TimelineDrawer.cs" />
     <Compile Include="Controls\RenderDisplay.xaml.cs">
       <DependentUpon>RenderDisplay.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\Animation\Animation.xaml">
+    <Page Include="Controls\Animation\Timeline\Animation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,11 +129,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Animation\DopeButton.xaml">
+    <Page Include="Controls\Animation\AnimationTitle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Animation\TimeLine.xaml">
+    <Page Include="Controls\Animation\AnimationTitles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Animation\Timeline\DopeButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Animation\Timeline\TimeLine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -143,7 +157,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\Animation\TimeLine.xaml.cs">
+    <Compile Include="Controls\Animation\Timeline\TimeLine.xaml.cs">
       <DependentUpon>TimeLine.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ValueSlider.xaml.cs">

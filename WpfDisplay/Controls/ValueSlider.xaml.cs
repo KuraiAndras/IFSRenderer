@@ -117,7 +117,7 @@ namespace WpfDisplay.Controls
             if (!hasAnimation)
             {
                 hasAnimation = true;
-                animationIndex=((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewAnimation(SetValue, Value);
+                animationIndex=((RendererGL)Application.Current.Windows.OfType<MainWindow>().First().DataContext).AnimationManager.AddNewAnimation(ValueName, SetValue, Value);
             }
             else
             {

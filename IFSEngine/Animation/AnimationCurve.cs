@@ -12,12 +12,13 @@ namespace IFSEngine.Animation
         public event ControlPointCreatedHandler OnControlPointCreated;
         private List<ControlPoint> controlPoints = new List<ControlPoint>();
         private ICurveImplementation curveImplementation = new LinearCurveImplementation();
-
+        
         public void AddControlPoint(ControlPoint newPoint)
         {
             controlPoints.Add(newPoint);
             controlPoints.Sort((x, y) => x.t < y.t ? -1 : 1);
             OnControlPointCreated?.Invoke(newPoint, GetDuration());
+
         }
         public double Evaluate(double t)
         {
